@@ -29,6 +29,7 @@ mysql> select concat(first_name,' ',last_name) as name, acc_type, email from Cus
 
 2.	Write a SQL query to list all transaction corresponding customer.
 mysql> select Customers.cust_id,first_name,Accounts.acc_id,acc_type,trans_id,trans_type,amount,trans_date from Customers,Accounts,Transactions where Customers.cust_id=Accounts.cust_id and Accounts.acc_id=Transactions.acc_id;
+
 3.	Write a SQL query to increase the balance of a specific account by a certain amount.
 mysql> update accounts set balance=balance+2000 where acc_id=5;
 
