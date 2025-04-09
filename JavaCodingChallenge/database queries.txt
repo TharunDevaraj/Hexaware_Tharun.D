@@ -1,0 +1,158 @@
+mysql> create database hospital_management_system;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> use hospital_management_system;
+Database changed
+mysql> create table patient(patientid int primary key,firstname varchar(20),lastname varchar(20),dateofbirth date,gender varchar(20),contact int,address varchar(50));
+Query OK, 0 rows affected (0.14 sec)
+
+mysql> create table doctor(doctorid int primary key,firstname varchar(20),lastname varchar(20),specialization varchar(30),contact int);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> create table appointment(appointmentid int primary key,patientid int,doctorid int,appointmentdate date,description text,foreign key (patientid) references patient(patientid) on delete cascade on update cascade, foreign key(doctorid) references doctor(doctorid) on delete cascade on update cascade);
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> desc patient;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| patientid   | int         | NO   | PRI | NULL    |       |
+| firstname   | varchar(20) | YES  |     | NULL    |       |
+| lastname    | varchar(20) | YES  |     | NULL    |       |
+| dateofbirth | date        | YES  |     | NULL    |       |
+| gender      | varchar(20) | YES  |     | NULL    |       |
+| contact     | int         | YES  |     | NULL    |       |
+| address     | varchar(50) | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+7 rows in set (0.01 sec)
+
+mysql> desc doctor;
++----------------+-------------+------+-----+---------+-------+
+| Field          | Type        | Null | Key | Default | Extra |
++----------------+-------------+------+-----+---------+-------+
+| doctorid       | int         | NO   | PRI | NULL    |       |
+| firstname      | varchar(20) | YES  |     | NULL    |       |
+| lastname       | varchar(20) | YES  |     | NULL    |       |
+| specialization | varchar(30) | YES  |     | NULL    |       |
+| contact        | int         | YES  |     | NULL    |       |
++----------------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> desc appointment;
++-----------------+------+------+-----+---------+-------+
+| Field           | Type | Null | Key | Default | Extra |
++-----------------+------+------+-----+---------+-------+
+| appointmentid   | int  | NO   | PRI | NULL    |       |
+| patientid       | int  | YES  | MUL | NULL    |       |
+| doctorid        | int  | YES  | MUL | NULL    |       |
+| appointmentdate | date | YES  |     | NULL    |       |
+| description     | text | YES  |     | NULL    |       |
++-----------------+------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> alter table patient modify contact varchar(15);
+Query OK, 0 rows affected (0.14 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc patient;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| patientid   | int         | NO   | PRI | NULL    |       |
+| firstname   | varchar(20) | YES  |     | NULL    |       |
+| lastname    | varchar(20) | YES  |     | NULL    |       |
+| dateofbirth | date        | YES  |     | NULL    |       |
+| gender      | varchar(20) | YES  |     | NULL    |       |
+| contact     | varchar(15) | YES  |     | NULL    |       |
+| address     | varchar(50) | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> alter table doctor modify contact varchar(15);
+Query OK, 0 rows affected (0.20 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc doctor;
++----------------+-------------+------+-----+---------+-------+
+| Field          | Type        | Null | Key | Default | Extra |
++----------------+-------------+------+-----+---------+-------+
+| doctorid       | int         | NO   | PRI | NULL    |       |
+| firstname      | varchar(20) | YES  |     | NULL    |       |
+| lastname       | varchar(20) | YES  |     | NULL    |       |
+| specialization | varchar(30) | YES  |     | NULL    |       |
+| contact        | varchar(15) | YES  |     | NULL    |       |
++----------------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> insert into patient values(101,"rahul","sharma","1990-05-12","male","9898989898","nehru street,chennai");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into doctor values(201,"mohit","kumar","cardiologist","4040404040");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into appointment values(1,101,201,"2025-01-01","checkup");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into patient values(102,"aditya","sharma","1990-12052","male","6767676767","cross street,chennai");
+ERROR 1292 (22007): Incorrect date value: '1990-12052' for column 'dateofbirth' at row 1
+mysql> insert into patient values(102,"aditya","sharma","1990-12-05","male","6767676767","cross street,chennai");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into doctor values(202,"imran","khan","child specialist","5050505050");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from patient;
++-----------+-----------+----------+-------------+--------+------------+----------------------+
+| patientid | firstname | lastname | dateofbirth | gender | contact    | address              |
++-----------+-----------+----------+-------------+--------+------------+----------------------+
+|       101 | rahul     | sharma   | 1990-05-12  | male   | 9898989898 | nehru street,chennai |
+|       102 | aditya    | sharma   | 1990-12-05  | male   | 6767676767 | cross street,chennai |
++-----------+-----------+----------+-------------+--------+------------+----------------------+
+2 rows in set (0.00 sec)
+
+mysql> select * from doctor;
++----------+-----------+----------+------------------+------------+
+| doctorid | firstname | lastname | specialization   | contact    |
++----------+-----------+----------+------------------+------------+
+|      201 | mohit     | kumar    | cardiologist     | 4040404040 |
+|      202 | imran     | khan     | child specialist | 5050505050 |
++----------+-----------+----------+------------------+------------+
+2 rows in set (0.00 sec)
+
+mysql> select * from appointment;
++---------------+-----------+----------+-----------------+-------------+
+| appointmentid | patientid | doctorid | appointmentdate | description |
++---------------+-----------+----------+-----------------+-------------+
+|             1 |       101 |      201 | 2025-01-01      | checkup     |
++---------------+-----------+----------+-----------------+-------------+
+1 row in set (0.00 sec)
+
+mysql> select * from appointment;
++---------------+-----------+----------+-----------------+----------------------+
+| appointmentid | patientid | doctorid | appointmentdate | description          |
++---------------+-----------+----------+-----------------+----------------------+
+|             1 |       101 |      201 | 2025-01-01      | checkup              |
+|             2 |       102 |      202 | 2023-09-18      | general body checkup |
++---------------+-----------+----------+-----------------+----------------------+
+2 rows in set (0.00 sec)
+
+mysql> select * from appointment;
++---------------+-----------+----------+-----------------+----------------------+
+| appointmentid | patientid | doctorid | appointmentdate | description          |
++---------------+-----------+----------+-----------------+----------------------+
+|             1 |       101 |      201 | 2020-09-18      | checkup              |
+|             2 |       102 |      202 | 2023-09-18      | general body checkup |
++---------------+-----------+----------+-----------------+----------------------+
+2 rows in set (0.00 sec)
+
+mysql> insert into appointment values(3,101,202,"2025-09-09","fever");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from appointment;
++---------------+-----------+----------+-----------------+----------------------+
+| appointmentid | patientid | doctorid | appointmentdate | description          |
++---------------+-----------+----------+-----------------+----------------------+
+|             1 |       101 |      201 | 2020-09-18      | checkup              |
+|             2 |       102 |      202 | 2023-09-18      | general body checkup |
++---------------+-----------+----------+-----------------+----------------------+
+2 rows in set (0.00 sec)
