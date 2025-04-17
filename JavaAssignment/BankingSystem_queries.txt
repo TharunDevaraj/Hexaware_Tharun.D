@@ -1,0 +1,118 @@
+mysql> use hmbank;
+Database changed
+mysql> show tables;
++------------------+
+| Tables_in_hmbank |
++------------------+
+| accounts         |
+| customers        |
+| transactions     |
++------------------+
+3 rows in set (0.02 sec)
+
+mysql> desc customers;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| cust_id    | int         | NO   | PRI | NULL    |       |
+| first_name | varchar(20) | YES  |     | NULL    |       |
+| last_name  | varchar(20) | YES  |     | NULL    |       |
+| dob        | date        | YES  |     | NULL    |       |
+| email      | text        | YES  |     | NULL    |       |
+| phone_num  | varchar(15) | YES  |     | NULL    |       |
+| address    | text        | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+7 rows in set (0.01 sec)
+
+mysql> desc accounts;
++----------+---------------+------+-----+---------+-------+
+| Field    | Type          | Null | Key | Default | Extra |
++----------+---------------+------+-----+---------+-------+
+| acc_id   | int           | NO   | PRI | NULL    |       |
+| cust_id  | int           | YES  | MUL | NULL    |       |
+| acc_type | varchar(15)   | YES  |     | NULL    |       |
+| balance  | decimal(15,2) | YES  |     | 0.00    |       |
++----------+---------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+mysql> desc transactions;
++------------+---------------+------+-----+---------+-------+
+| Field      | Type          | Null | Key | Default | Extra |
++------------+---------------+------+-----+---------+-------+
+| trans_id   | int           | NO   | PRI | NULL    |       |
+| acc_id     | int           | YES  | MUL | NULL    |       |
+| trans_type | varchar(15)   | YES  |     | NULL    |       |
+| amount     | decimal(15,2) | YES  |     | NULL    |       |
+| trans_date | date          | YES  |     | NULL    |       |
++------------+---------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * from customers;
++---------+------------+-----------+------------+------------------+------------+----------------------------+
+| cust_id | first_name | last_name | dob        | email            | phone_num  | address                    |
++---------+------------+-----------+------------+------------------+------------+----------------------------+
+|       1 | Rahul      | Sharma    | 1994-10-04 | rahul@gmail.com  | 5656565656 | 13, nehru street, chennai  |
+|       2 | Akash      | Gupta     | 1990-04-10 | akash@yahoo.com  | 1234567890 | 10, gandhi street, chennai |
+|       3 | Suresh     | Raina     | 1993-10-03 | raina@gmail.com  | 3333333333 | 22, marina, chennai        |
+|       4 | Virat      | Kohli     | 1985-11-07 | kohli@gmail.com  | 4949494949 | 18, chinnaswamy, bangalore |
+|       5 | David      | Miller    | 1999-06-01 | miller@yahoo.com | 1010101010 | 17, nehru street, chennai  |
+|       6 | Gopal      | Varma     | 2000-01-08 | gopal@gmail.com  | 2323232323 | 23, main street, chennai   |
+|       7 | MS         | Dhoni     | 1980-07-07 | dhoni@gmail.com  | 7777777777 | 7, marina, chennai         |
+|       8 | Ravindra   | Jadeja    | 1990-11-24 | jadeja@gmail.com | 8888888888 | 8, marina, chennai         |
+|       9 | DJ         | Bravo     | 1993-10-12 | bravo@yahoo.com  | 9999999999 | 9, nehru st, chennai       |
+|      10 | Shivam     | Dube      | 1984-02-19 | dube@gmail.com   | 2525252525 | 58, cross street, chennai  |
++---------+------------+-----------+------------+------------------+------------+----------------------------+
+10 rows in set (0.00 sec)
+
+mysql> select * from accounts;
++--------+---------+--------------+----------+
+| acc_id | cust_id | acc_type     | balance  |
++--------+---------+--------------+----------+
+|      1 |       5 | current      |  3000.00 |
+|      2 |       3 | zero_balance |     0.00 |
+|      3 |       7 | savings      | 75000.90 |
+|      4 |       1 | savings      | 15000.50 |
+|      5 |      10 | zero_balance |  2000.00 |
+|      6 |       6 | zero_balance |     0.00 |
+|      7 |       2 | current      | 42000.75 |
+|      9 |       4 | savings      | 25000.25 |
+|     10 |       8 | current      | 12500.30 |
+|     11 |       1 | current      |  8000.00 |
+|     12 |       2 | savings      | 17000.40 |
+|     13 |       1 | savings      |  1000.00 |
+|     14 |       5 | current      |  1000.00 |
++--------+---------+--------------+----------+
+13 rows in set (0.00 sec)
+
+mysql> select * from transactions;
++----------+--------+---------------+----------+------------+
+| trans_id | acc_id | trans_type    | amount   | trans_date |
++----------+--------+---------------+----------+------------+
+|        1 |      1 | deposit       |  5000.00 | 2024-03-01 |
+|        2 |      2 | withdrawal    |  2000.00 | 2024-03-02 |
+|        3 |      3 | deposit       | 10000.50 | 2024-03-03 |
+|        4 |      4 | transfer      |  2500.00 | 2024-03-04 |
+|        5 |      5 | deposit       |  7500.00 | 2024-03-05 |
+|        6 |      6 | withdrawal    |  1500.00 | 2024-03-06 |
+|        7 |      7 | transfer      |  3000.00 | 2024-03-07 |
+|        9 |      9 | withdrawal    |  4000.00 | 2024-03-09 |
+|       10 |     10 | deposit       |  6000.00 | 2024-03-10 |
+|       11 |     11 | transfer      |  2000.50 | 2024-03-11 |
+|       12 |     12 | deposit       |  9000.00 | 2024-03-12 |
+|       13 |      1 | withdrawal    |  3000.00 | 2024-03-13 |
+|       14 |      2 | deposit       |  4500.00 | 2024-03-14 |
+|       15 |      3 | withdrawal    |  2000.00 | 2024-03-15 |
+|       16 |      4 | deposit       | 12000.75 | 2024-03-16 |
+|       17 |      5 | transfer      |  5000.00 | 2024-03-17 |
+|       18 |      6 | deposit       |  8500.50 | 2024-03-18 |
+|       19 |      5 | deposit       |  3000.00 | 2024-03-18 |
+|       20 |      4 | deposit       |  2500.00 | 2024-03-18 |
+|       21 |     10 | deposit       |  6000.00 | 2024-03-18 |
+|       22 |     12 | Deposit       |  1000.00 | 2025-04-17 |
+|       23 |     10 | Deposit       |   500.00 | 2025-04-17 |
+|       24 |      1 | Withdraw      |  2000.00 | 2025-04-17 |
+|       25 |      7 | Transfer to 9 | 22000.00 | 2025-04-17 |
+|       26 |      9 | Transfer to 7 | 22000.00 | 2025-04-17 |
+|       27 |      9 | Transfer to 7 | 20000.00 | 2025-04-17 |
++----------+--------+---------------+----------+------------+
+26 rows in set (0.00 sec)
