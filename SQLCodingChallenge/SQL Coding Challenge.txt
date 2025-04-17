@@ -1,0 +1,220 @@
+J524 THARUN.D
+Hexaware MySQL Coding Challenge
+Crime Management System
+
+Answers:
+
+1.
+mysql> select * from Crime where Status="Open";
++---------+--------------+--------------+------------------------+--------------------------------------+--------+
+| CrimeID | IncidentType | IncidentDate | Location               | Description                          | Status |
++---------+--------------+--------------+------------------------+--------------------------------------+--------+
+|       1 | Robbery      | 2023-09-15   | 123 Main St, Cityville | Armed robbery at a convenience store | Open   |
++---------+--------------+--------------+------------------------+--------------------------------------+--------+
+1 row in set (0.01 sec)
+
+2.
+mysql> select count(*) from Crime;
++----------+
+| count(*) |
++----------+
+|        3 |
++----------+
+1 row in set (0.39 sec)
+
+3.
+mysql> select distinct IncidentType from Crime;
++--------------+
+| IncidentType |
++--------------+
+| Robbery      |
+| Homicide     |
+| Theft        |
++--------------+
+3 rows in set (0.46 sec)
+
+4.
+mysql> select * from Crime where IncidentDate between "2023-09-01" and "2023-09-10";
++---------+--------------+--------------+-------------------------+--------------------------------+--------+
+| CrimeID | IncidentType | IncidentDate | Location                | Description                    | Status |
++---------+--------------+--------------+-------------------------+--------------------------------+--------+
+|       3 | Theft        | 2023-09-10   | 789 Oak St, Villagetown | Shoplifting incident at a mall | Closed |
++---------+--------------+--------------+-------------------------+--------------------------------+--------+
+1 row in set (0.00 sec)
+
+5.
+As there is no column for age I added a column age and inserted some values
+mysql> alter table Victim add age int;
+Query OK, 0 rows affected (0.46 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table Suspect add age int;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> update Victim set age = 35 where VictimID = 1;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update Victim set age = 28 where VictimID = 2;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update Victim set age = 22 where VictimID = 3;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update Suspect set age = 40 where SuspectID = 1;
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 1  Changed: 0  Warnings: 0
+
+mysql> update Suspect set age = 33 where SuspectID = 2;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update Suspect set age = 30 where SuspectID = 3;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select name,age from victim union select name,age from suspect order by age desc;
++---------------+------+
+| name          | age  |
++---------------+------+
+| Robber 1      |   40 |
+| John Doe      |   35 |
+| Unknown       |   33 |
+| Suspect 1     |   30 |
+| Jane Smith    |   28 |
+| Alice Johnson |   22 |
++---------------+------+
+6 rows in set (0.00 sec)
+
+6.
+mysql> select avg(age) from (select age from Victim union select age from Suspect) as overall ;
++----------+
+| avg(age) |
++----------+
+|  31.3333 |
++----------+
+1 row in set (0.00 sec)
+
+7.
+mysql> select IncidentType,count(*) from Crime where Status="Open" group by IncidentType;
++--------------+----------+
+| IncidentType | count(*) |
++--------------+----------+
+| Robbery      |        1 |
++--------------+----------+
+1 row in set (0.00 sec)
+
+8.
+mysql> select * from Victim where Name like "%doe%" union select * from Suspect where Name like "%doe%";
++----------+---------+----------+---------------------+----------------+------+
+| VictimID | CrimeID | Name     | ContactInfo         | Injuries       | age  |
++----------+---------+----------+---------------------+----------------+------+
+|        1 |       1 | John Doe | johndoe@example.com | Minor injuries |   35 |
++----------+---------+----------+---------------------+----------------+------+
+1 row in set (0.00 sec)
+
+9.
+mysql> select name,status from Crime inner join Victim on Crime.CrimeID=Victim.CrimeId where status in ("Open","Closed") union select name,status from Crime inner join Suspect on Crime.CrimeID=Suspect.CrimeId where status in ("Open","Closed");
++---------------+--------+
+| name          | status |
++---------------+--------+
+| John Doe      | Open   |
+| Alice Johnson | Closed |
+| Robber 1      | Open   |
+| Suspect 1     | Closed |
++---------------+--------+
+4 rows in set (0.00 sec)
+
+10.
+mysql> select IncidentType from Crime c left join Victim v on c.CrimeId=v.CrimeId left join Suspect s on c.CrimeID=s.CrimeID where (v.age=30 or v.age=25) or (s.age=30 or s.age=35);
++--------------+
+| IncidentType |
++--------------+
+| Theft        |
++--------------+
+1 row in set (0.04 sec)
+
+11.
+mysql> select Name from Victim where CrimeID in (select CrimeiD from Crime where IncidentType="Robbery")union select Name from Suspect where CrimeID in (select CrimeID from Crime where IncidentType="Robbery");
++----------+
+| Name     |
++----------+
+| John Doe |
+| Robber 1 |
++----------+
+2 rows in set (0.00 sec)
+
+12.
+mysql> select IncidentType,count(*) from Crime where Status="Open" group by IncidentType having count(*)>1;
+Empty set (0.36 sec)
+
+13.
+mysql> select c.* from crime c inner join suspect s on c.crimeid=s.crimeid join victim v on s.name=v.name and s.crimeid!=v.crimeid;
+Empty set (0.01 sec)
+
+14.
+mysql> select c.*,v.name,s.name from crime c left join victim v on c.crimeid=v.crimeid left join suspect s on c.crimeid=s.crimeid;
++---------+--------------+--------------+-------------------------+--------------------------------------+----------------------+---------------+-----------+
+| CrimeID | IncidentType | IncidentDate | Location                | Description                          | Status               | name          | name      |
++---------+--------------+--------------+-------------------------+--------------------------------------+----------------------+---------------+-----------+
+|       1 | Robbery      | 2023-09-15   | 123 Main St, Cityville  | Armed robbery at a convenience store | Open                 | John Doe      | Robber 1  |
+|       2 | Homicide     | 2023-09-20   | 456 Elm St, Townsville  | Investigation into a murder case     | Under
+Investigation | Jane Smith    | Unknown   |
+|       3 | Theft        | 2023-09-10   | 789 Oak St, Villagetown | Shoplifting incident at a mall       | Closed               | Alice Johnson | Suspect 1 |
++---------+--------------+--------------+-------------------------+--------------------------------------+----------------------+---------------+-----------+
+3 rows in set (0.00 sec)
+
+15.
+mysql> select c.* from Crime c join Suspect s on c.crimeid=s.crimeid where s.age > any (select age from victim);
++---------+--------------+--------------+-------------------------+--------------------------------------+----------------------+
+| CrimeID | IncidentType | IncidentDate | Location                | Description                          | Status               |
++---------+--------------+--------------+-------------------------+--------------------------------------+----------------------+
+|       1 | Robbery      | 2023-09-15   | 123 Main St, Cityville  | Armed robbery at a convenience store | Open                 |
+|       2 | Homicide     | 2023-09-20   | 456 Elm St, Townsville  | Investigation into a murder case     | Under
+Investigation |
+|       3 | Theft        | 2023-09-10   | 789 Oak St, Villagetown | Shoplifting incident at a mall       | Closed               |
++---------+--------------+--------------+-------------------------+--------------------------------------+----------------------+
+3 rows in set (0.00 sec)
+
+16.
+mysql> select name,count(*) from suspect group by name having count(*)>1;
+Empty set (0.00 sec)
+
+17.
+mysql> select * from crime where crimeid not in (select crimeid from suspect);
+Empty set (0.00 sec)
+
+18.
+mysql> select * from Crime where IncidentType in ("Homicide","Robbery");
++---------+--------------+--------------+------------------------+--------------------------------------+----------------------+
+| CrimeID | IncidentType | IncidentDate | Location               | Description                          | Status               |
++---------+--------------+--------------+------------------------+--------------------------------------+----------------------+
+|       1 | Robbery      | 2023-09-15   | 123 Main St, Cityville | Armed robbery at a convenience store | Open                 |
+|       2 | Homicide     | 2023-09-20   | 456 Elm St, Townsville | Investigation into a murder case     | Under
+Investigation |
++---------+--------------+--------------+------------------------+--------------------------------------+----------------------+
+2 rows in set (0.00 sec)
+
+19.
+mysql> select c.*,coalesce(s.name,"no suspect") from crime c left join suspect s on c.crimeid=s.crimeid;
++---------+--------------+--------------+-------------------------+--------------------------------------+----------------------+-------------------------------+
+| CrimeID | IncidentType | IncidentDate | Location                | Description                          | Status               | coalesce(s.name,"no suspect") |
++---------+--------------+--------------+-------------------------+--------------------------------------+----------------------+-------------------------------+
+|       1 | Robbery      | 2023-09-15   | 123 Main St, Cityville  | Armed robbery at a convenience store | Open                 | Robber 1                      |
+|       2 | Homicide     | 2023-09-20   | 456 Elm St, Townsville  | Investigation into a murder case     | Under
+Investigation | Unknown                       |
+|       3 | Theft        | 2023-09-10   | 789 Oak St, Villagetown | Shoplifting incident at a mall       | Closed               | Suspect 1                     |
++---------+--------------+--------------+-------------------------+--------------------------------------+----------------------+-------------------------------+
+3 rows in set (0.00 sec)
+
+20.
+mysql> select s.* from suspect s join crime c on c.crimeid=s.crimeid where c.incidenttype in ("Robbery","Assault");
++-----------+---------+----------+-------------------------+------------------------------+------+
+| SuspectID | CrimeID | Name     | Description             | CriminalHistory              | age  |
++-----------+---------+----------+-------------------------+------------------------------+------+
+|         1 |       1 | Robber 1 | Armed and masked robber | Previous robbery convictions |   40 |
++-----------+---------+----------+-------------------------+------------------------------+------+
+1 row in set (0.00 sec)
